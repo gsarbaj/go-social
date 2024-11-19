@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/lpernett/godotenv"
 	"icu.imta.gsarbaj.social/internal/env"
+	"icu.imta.gsarbaj.social/internal/store"
 	"log"
 )
 
@@ -19,8 +20,11 @@ func main() {
 		address: env.GetString("ADDR", ":8080"),
 	}
 
+	storeDB := store.NewStorage(nil)
+
 	app := &application{
 		config: cfg,
+		store:  storeDB,
 	}
 
 	mux := app.mount()
