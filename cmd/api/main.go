@@ -18,6 +18,9 @@ func main() {
 
 	cfg := config{
 		address: env.GetString("ADDR", ":8080"),
+		db: dbConfig{
+			addr: env.GetString("DB_ADDR", ":5432"),
+		},
 	}
 
 	storeDB := store.NewStorage(nil)
