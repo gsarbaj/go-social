@@ -12,6 +12,7 @@ func main() {
 		config: cfg,
 	}
 
-	log.Fatalln(app.run())
+	mux := app.mount()
 
+	log.Fatalln(app.run(mux))
 }
