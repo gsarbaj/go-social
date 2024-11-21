@@ -46,6 +46,11 @@ func (app *application) mount() http.Handler {
 	})
 
 	//posts
+
+	r.Route("/v1/posts", func(r chi.Router) {
+		r.Post("/", app.createPostHandler)
+	})
+
 	//users
 	//auth
 

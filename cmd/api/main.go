@@ -32,7 +32,7 @@ func main() {
 
 	dbConnection, err := db.New(cfg.db.addr, cfg.db.maxOpenConns, cfg.db.maxIdleConns, cfg.db.maxIdleTime)
 	if err != nil {
-		log.Panic(err.Error())
+		log.Println("DB ERROR", err.Error())
 	}
 
 	defer dbConnection.Close()
@@ -47,5 +47,5 @@ func main() {
 
 	mux := app.mount()
 
-	log.Fatalln(app.run(mux))
+	log.Fatalln("MUX", app.run(mux))
 }

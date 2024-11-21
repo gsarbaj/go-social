@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"github.com/lib/pq"
-	"log"
 	"time"
 )
 
@@ -27,7 +26,6 @@ func (s *PostStore) Create(ctx context.Context, post *Post) error {
 
 	err := s.db.QueryRowContext(ctx, query, post.Content, post.Title, post.UserID, pq.Array(post.Tags)).Scan(&post.ID, &post.CreatedAt, &post.UpdatedAt)
 	if err != nil {
-		log.Fatalln(err.Error())
 		return err
 	}
 	return nil

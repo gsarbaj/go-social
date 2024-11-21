@@ -22,7 +22,6 @@ func (app *application) healthHandler(w http.ResponseWriter, r *http.Request) {
 		err := writeJSONError(w, http.StatusInternalServerError, err.Error())
 		if err != nil {
 			log.Println(err.Error())
-			return
 		}
 	}
 
