@@ -2,7 +2,7 @@ POST http://localhost:8080/v1/posts/
 Content-Type: application/json
 
 {
-  "title": "New post",
-  "content": "Hey guys this is my first post",
+  "title": "Hello",
+  "content": "Hello",
   "tags": ["tag1"]
 }
