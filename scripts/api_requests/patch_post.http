@@ -1,0 +1,6 @@
+PATCH http://localhost:8080/v1/posts/3
+Content-Type: application/json
+
+{
+  "title": "Hello"
+}
