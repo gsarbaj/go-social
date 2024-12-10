@@ -1,0 +1,13 @@
+#PUT http://localhost:8080/v1/users/215/unfollow
+#Content-Type: application/json
+#
+#{
+#  "user_id": 205
+#}
+
+PUT http://localhost:8080/v1/users/215/follow
+Content-Type: application/json
+
+{
+  "user_id": 205
+}
