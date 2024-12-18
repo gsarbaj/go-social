@@ -1,0 +1,1 @@
+EXPLAIN ANALYSE SELECT * FROM comments WHERE content ILIKE '%post%';
