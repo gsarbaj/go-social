@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	httpSwager "github.com/swaggo/http-swagger/v2"
+	"icu.imta.gsarbaj.social/docs" // This is required to generate swagger docs
 	"icu.imta.gsarbaj.social/internal/store"
 	"log"
 	"net/http"
@@ -18,6 +21,7 @@ type config struct {
 	address string
 	db      dbConfig
 	env     string
+	apiURL  string
 }
 
 type dbConfig struct {
@@ -43,6 +47,9 @@ func (app *application) mount() http.Handler {
 
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/health", app.healthHandler)
+
+		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.address)
+		r.Get("/swagger/*", httpSwager.Handler(httpSwager.URL(docsURL)))
 
 		//posts
 
@@ -83,6 +90,11 @@ func (app *application) mount() http.Handler {
 }
 
 func (app *application) run(mux http.Handler) error {
+
+	// Docs
+	docs.SwaggerInfo.Version = version
+	docs.SwaggerInfo.Host = app.config.apiURL
+	docs.SwaggerInfo.BasePath = "/v1"
 
 	srv := &http.Server{
 		Addr:         app.config.address,
