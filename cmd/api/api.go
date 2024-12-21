@@ -5,9 +5,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	httpSwager "github.com/swaggo/http-swagger/v2"
+	"go.uber.org/zap"
 	"icu.imta.gsarbaj.social/docs" // This is required to generate swagger docs
 	"icu.imta.gsarbaj.social/internal/store"
-	"log"
 	"net/http"
 	"time"
 )
@@ -15,6 +15,7 @@ import (
 type application struct {
 	config config
 	store  store.Storage
+	logger *zap.SugaredLogger
 }
 
 type config struct {
@@ -104,7 +105,7 @@ func (app *application) run(mux http.Handler) error {
 		IdleTimeout:  60 * time.Second,
 	}
 
-	log.Printf("Server listening on port %s", app.config.address)
+	app.logger.Infow("Server has started", "addr", app.config.address, "env", app.config.env)
 
 	return srv.ListenAndServe()
 }

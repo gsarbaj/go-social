@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/lpernett/godotenv"
+	"go.uber.org/zap"
 	"icu.imta.gsarbaj.social/internal/db"
 	"icu.imta.gsarbaj.social/internal/env"
 	"icu.imta.gsarbaj.social/internal/store"
@@ -49,22 +50,29 @@ func main() {
 		env: env.GetString("ENV", "development"),
 	}
 
+	// Logger
+	logger := zap.Must(zap.NewProduction()).Sugar()
+	defer logger.Sync()
+
+	// Database
 	dbConnection, err := db.New(cfg.db.addr, cfg.db.maxOpenConns, cfg.db.maxIdleConns, cfg.db.maxIdleTime)
 	if err != nil {
-		log.Println("DB ERROR", err.Error())
+		//log.Println("DB ERROR", err.Error())
+		logger.Fatal(err)
 	}
 
 	defer dbConnection.Close()
-	log.Println("Database connection established")
+	logger.Info("Database connection established")
 
 	storeDB := store.NewStorage(dbConnection)
 
 	app := &application{
 		config: cfg,
 		store:  storeDB,
+		logger: logger,
 	}
 
 	mux := app.mount()
 
-	log.Fatalln("MUX", app.run(mux))
+	logger.Fatalln("MUX", app.run(mux))
 }
