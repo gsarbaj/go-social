@@ -2,9 +2,9 @@ POST http://localhost:8080/v1/authentication/user
 Content-Type: application/json
 
 {
-  "email": "g.sarbaj@icloud.com",
-  "username": "gsarbaj",
-  "password": "12345677654321"
+  "email": "test3@icloud.com",
+  "username": "test3",
+  "password": "TestUser1233"
 
 
 }

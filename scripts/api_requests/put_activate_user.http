@@ -1,0 +1,2 @@
+PUT http://localhost:8080/v1/users/activate/627c5f40-ef35-4915-87c6-85c8298446ee
+Content-Type: application/json

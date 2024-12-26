@@ -27,6 +27,25 @@ const userCtx userKey = "user"
 //	@Security		ApiKeyAuth
 //	@Router			/users/{id} [get]
 
+func (app *application) activateUserHandler(w http.ResponseWriter, r *http.Request) {
+	token := chi.URLParam(r, "token")
+
+	err := app.store.Users.Activate(r.Context(), token)
+	if err != nil {
+		switch err {
+		case store.ErrNotFound:
+			app.notFoundResponse(w, r, err)
+		default:
+			app.internalServerError(w, r, err)
+		}
+		return
+	}
+
+	if err := app.jsonResponse(w, http.StatusNoContent, ""); err != nil {
+		app.internalServerError(w, r, err)
+	}
+}
+
 func (app *application) getUserHandler(w http.ResponseWriter, r *http.Request) {
 	user := getUserFromContext(r)
 
