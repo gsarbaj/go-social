@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"icu.imta.gsarbaj.social/internal/store"
 	"log"
@@ -92,22 +93,26 @@ var comments = []string{
 	"Where can I find more details about this?",
 }
 
-func Seed(store store.Storage) {
+func Seed(store store.Storage, db *sql.DB) error {
 	ctx := context.Background()
 
 	users := generateUsers(100)
+	tx, _ := db.BeginTx(ctx, nil)
 	for _, u := range users {
-		if err := store.Users.Create(ctx, u); err != nil {
+		if err := store.Users.Create(ctx, tx, u); err != nil {
+			_ = tx.Rollback()
 			log.Println("Error creating user", err)
-			return
+			return nil
 		}
 	}
+
+	tx.Commit()
 
 	posts := generatePosts(200, users)
 	for _, post := range posts {
 		if err := store.Posts.Create(ctx, post); err != nil {
 			log.Println("Error creating post", err)
-			return
+			return nil
 		}
 	}
 
@@ -115,11 +120,12 @@ func Seed(store store.Storage) {
 	for _, comment := range comments {
 		if err := store.Comments.Create(ctx, comment); err != nil {
 			log.Println("Error creating comment", err)
-			return
+			return nil
 		}
 	}
 
 	log.Println("Seeding complete")
+	return nil
 }
 
 func generateUsers(num int) []*store.User {
@@ -128,7 +134,6 @@ func generateUsers(num int) []*store.User {
 		users[i] = &store.User{
 			Username: usernames[i%len(usernames)] + fmt.Sprintf("%d", i),
 			Email:    usernames[i%len(usernames)] + fmt.Sprintf("%d", i) + "@example.com",
-			Password: "123123",
 		}
 	}
 	return users

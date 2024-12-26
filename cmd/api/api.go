@@ -57,7 +57,7 @@ func (app *application) mount() http.Handler {
 		docsURL := fmt.Sprintf("%s/swagger/doc.json", app.config.address)
 		r.Get("/swagger/*", httpSwager.Handler(httpSwager.URL(docsURL)))
 
-		//posts
+		//Posts
 
 		r.Route("/posts", func(r chi.Router) {
 			r.Post("/", app.createPostHandler)
@@ -87,12 +87,12 @@ func (app *application) mount() http.Handler {
 			r.Group(func(r chi.Router) {
 				r.Get("/feed", app.getUserFeedHandler)
 			})
+		})
 
-			// Public
+		// Public
 
-			r.Route("/authentications", func(r chi.Router) {
-				r.Post("/user", app.RegisterUserHandler)
-			})
+		r.Route("/authentication", func(r chi.Router) {
+			r.Post("/user", app.RegisterUserHandler)
 		})
 	})
 
