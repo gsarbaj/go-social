@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"icu.imta.gsarbaj.social/internal/db"
 	"icu.imta.gsarbaj.social/internal/env"
+	"icu.imta.gsarbaj.social/internal/mailer"
 	"icu.imta.gsarbaj.social/internal/store"
 	"log"
 	"time"
@@ -40,8 +41,9 @@ func main() {
 	//log.Println(os.Getenv("TEST"))
 
 	cfg := config{
-		address: env.GetString("ADDR", ":8080"),
-		apiURL:  env.GetString("API_URL", "http://localhost:8080"),
+		address:     env.GetString("ADDR", ":8080"),
+		apiURL:      env.GetString("API_URL", "http://localhost:8080"),
+		frontendURL: env.GetString("FRONTEND_URL", "http://localhost:4000"),
 		db: dbConfig{
 			addr:         env.GetString("DB_ADDR", "postgres://gsarbaj:!Genryh38312290966@localhost/social?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 30),
@@ -50,7 +52,11 @@ func main() {
 		},
 		env: env.GetString("ENV", "development"),
 		mail: mailConfig{
-			exp: time.Hour * 24 * 3, // 3 days
+			exp:       time.Hour * 24 * 3, // 3 days
+			fromEmail: env.GetString("FROM_EMAIL", ""),
+			sendGrid: sendGridConfig{
+				apiKey: env.GetString("SENDGRID_API_KEY", ""),
+			},
 		},
 	}
 
@@ -70,10 +76,13 @@ func main() {
 
 	storeDB := store.NewStorage(dbConnection)
 
+	mailer := mailer.NewSendGrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
+
 	app := &application{
 		config: cfg,
 		store:  storeDB,
 		logger: logger,
+		mailer: mailer,
 	}
 
 	mux := app.mount()

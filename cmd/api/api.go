@@ -7,6 +7,7 @@ import (
 	httpSwager "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 	"icu.imta.gsarbaj.social/docs" // This is required to generate swagger docs
+	"icu.imta.gsarbaj.social/internal/mailer"
 	"icu.imta.gsarbaj.social/internal/store"
 	"net/http"
 	"time"
@@ -16,18 +17,26 @@ type application struct {
 	config config
 	store  store.Storage
 	logger *zap.SugaredLogger
+	mailer mailer.Client
 }
 
 type config struct {
-	address string
-	db      dbConfig
-	env     string
-	apiURL  string
-	mail    mailConfig
+	address     string
+	db          dbConfig
+	env         string
+	apiURL      string
+	mail        mailConfig
+	frontendURL string
 }
 
 type mailConfig struct {
-	exp time.Duration
+	sendGrid  sendGridConfig
+	fromEmail string
+	exp       time.Duration
+}
+
+type sendGridConfig struct {
+	apiKey string
 }
 
 type dbConfig struct {
