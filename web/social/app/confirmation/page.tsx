@@ -2,13 +2,41 @@
 
 import {Button} from "@/components/ui/button";
 import {handleConfirm} from "@/app/server/handleConfirm";
-import {useSearchParams} from "next/navigation";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
+
+
 
 export default function ConfirmationPage () {
 
 
+    const router = useRouter()
+
+
     const handleClick = () => {
-        handleConfirm().then(r => console.log(r));
+        handleConfirm().then(r => {
+
+            if (r.error) {
+                toast.error(r.error, {
+                    onAutoClose: () => {
+                        console.log(r.error)
+                    },
+                    onDismiss: () => {
+                        console.log(r.error)
+                    }
+                });
+            } else {
+                toast.success(r.message, {
+                    onAutoClose: () => {
+                        router.push("/");
+                    },
+                    onDismiss: () => {
+                        router.push("/");
+                    }
+                });
+            }
+        });
+
     }
 
     return (

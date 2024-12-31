@@ -25,9 +25,20 @@ export const handleConfirm = async () => {
 
     if (response.ok) {
         console.log("Failed to activate user")
-        redirect("/")
+
+        return {
+            error: false,
+            message: response.status +" "+ response.statusText
+        }
+
+        //
     } else {
-        console.log(response.status, response.statusText)
+
+        return {
+            error: response.status +" "+ response.statusText,
+            message: response.statusText
+        }
+
     }
 }
 
