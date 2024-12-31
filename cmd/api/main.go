@@ -39,6 +39,7 @@ func main() {
 	}
 
 	//log.Println(os.Getenv("TEST"))
+	log.Printf(env.GetString("MAIL_TRAP_API_KEY", ""))
 
 	cfg := config{
 		address:     env.GetString("ADDR", ":8080"),
@@ -56,6 +57,9 @@ func main() {
 			fromEmail: env.GetString("FROM_EMAIL", ""),
 			sendGrid: sendGridConfig{
 				apiKey: env.GetString("SENDGRID_API_KEY", ""),
+			},
+			mailTrap: mailTrapConfig{
+				apiKey: env.GetString("MAIL_TRAP_API_KEY", "7ded1226b6c39fa20ea7ccf793645ec6"),
 			},
 		},
 	}
@@ -76,13 +80,17 @@ func main() {
 
 	storeDB := store.NewStorage(dbConnection)
 
-	mailer := mailer.NewSendGrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
+	//mailer := mailer.NewSendGrid(cfg.mail.sendGrid.apiKey, cfg.mail.fromEmail)
+	mailtrap, err := mailer.NewMailTrapClient(cfg.mail.mailTrap.apiKey, cfg.mail.fromEmail)
+	if err != nil {
+		logger.Fatal(err)
+	}
 
 	app := &application{
 		config: cfg,
 		store:  storeDB,
 		logger: logger,
-		mailer: mailer,
+		mailer: mailtrap,
 	}
 
 	mux := app.mount()

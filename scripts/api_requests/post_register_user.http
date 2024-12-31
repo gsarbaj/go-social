@@ -2,7 +2,7 @@ POST http://localhost:8080/v1/authentication/user
 Content-Type: application/json
 
 {
-  "email": "genrich.sarbaj@gmail.com",
+  "email": "genrichsarbaj@gmail.com",
   "username": "test4",
   "password": "TestUser1234"
 
