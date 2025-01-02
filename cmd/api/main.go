@@ -62,6 +62,12 @@ func main() {
 				apiKey: env.GetString("MAIL_TRAP_API_KEY", "7ded1226b6c39fa20ea7ccf793645ec6"),
 			},
 		},
+		auth: authConfig{
+			basic: basicConfig{
+				username: env.GetString("AUTH_BASIC_USER", "admin"),
+				password: env.GetString("AUTH_BASIC_PASSWORD", "admin"),
+			},
+		},
 	}
 
 	// Logger
