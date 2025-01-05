@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/lpernett/godotenv"
 	"go.uber.org/zap"
+	"icu.imta.gsarbaj.social/internal/auth"
 	"icu.imta.gsarbaj.social/internal/db"
 	"icu.imta.gsarbaj.social/internal/env"
 	"icu.imta.gsarbaj.social/internal/mailer"
@@ -39,7 +40,7 @@ func main() {
 	}
 
 	//log.Println(os.Getenv("TEST"))
-	log.Printf(env.GetString("MAIL_TRAP_API_KEY", ""))
+	//log.Printf(env.GetString("MAIL_TRAP_API_KEY", ""))
 
 	cfg := config{
 		address:     env.GetString("ADDR", ":8080"),
@@ -67,6 +68,11 @@ func main() {
 				username: env.GetString("AUTH_BASIC_USER", "admin"),
 				password: env.GetString("AUTH_BASIC_PASSWORD", "admin"),
 			},
+			token: tokenConfig{
+				secret: env.GetString("AUTH_TOKEN_SECRET", "secret"),
+				exp:    time.Hour * 24 * 7,
+				iss:    "social",
+			},
 		},
 	}
 
@@ -92,11 +98,14 @@ func main() {
 		logger.Fatal(err)
 	}
 
+	jwtAuthenticator := auth.NewJWTAuthenticator(cfg.auth.token.secret, cfg.auth.token.iss, cfg.auth.token.iss)
+
 	app := &application{
-		config: cfg,
-		store:  storeDB,
-		logger: logger,
-		mailer: mailtrap,
+		config:        cfg,
+		store:         storeDB,
+		logger:        logger,
+		mailer:        mailtrap,
+		authenticator: jwtAuthenticator,
 	}
 
 	mux := app.mount()

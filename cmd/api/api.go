@@ -7,6 +7,7 @@ import (
 	httpSwager "github.com/swaggo/http-swagger/v2"
 	"go.uber.org/zap"
 	"icu.imta.gsarbaj.social/docs" // This is required to generate swagger docs
+	"icu.imta.gsarbaj.social/internal/auth"
 	"icu.imta.gsarbaj.social/internal/mailer"
 	"icu.imta.gsarbaj.social/internal/store"
 	"net/http"
@@ -14,10 +15,11 @@ import (
 )
 
 type application struct {
-	config config
-	store  store.Storage
-	logger *zap.SugaredLogger
-	mailer mailer.Client
+	config        config
+	store         store.Storage
+	logger        *zap.SugaredLogger
+	mailer        mailer.Client
+	authenticator auth.Authenticator
 }
 
 type config struct {
@@ -32,6 +34,13 @@ type config struct {
 
 type authConfig struct {
 	basic basicConfig
+	token tokenConfig
+}
+
+type tokenConfig struct {
+	secret string
+	exp    time.Duration
+	iss    string
 }
 
 type basicConfig struct {
@@ -84,7 +93,9 @@ func (app *application) mount() http.Handler {
 		//Posts
 
 		r.Route("/posts", func(r chi.Router) {
+			r.Use(app.AuthTokenMiddleware)
 			r.Post("/", app.createPostHandler)
+
 			r.Route("/{postID}", func(r chi.Router) {
 
 				r.Use(app.postContextMiddleware)
@@ -120,6 +131,7 @@ func (app *application) mount() http.Handler {
 
 		r.Route("/authentication", func(r chi.Router) {
 			r.Post("/user", app.RegisterUserHandler)
+			r.Post("/token", app.createTokenHandler)
 		})
 	})
 
