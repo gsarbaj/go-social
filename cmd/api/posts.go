@@ -39,12 +39,13 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	user := getUserFromContext(r)
+
 	post := &store.Post{
 		Title:   payload.Title,
 		Content: payload.Content,
 		Tags:    payload.Tags,
-		// TODO: Change after auth
-		UserID: int64(1),
+		UserID:  user.ID,
 	}
 
 	ctx := r.Context()
@@ -130,7 +131,7 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 
 	err := app.store.Posts.Update(r.Context(), post)
 	if err != nil {
-		
+
 		app.internalServerError(w, r, err)
 		return
 	}

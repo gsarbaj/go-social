@@ -1,1 +1,3 @@
-GET http://localhost:8080/v1/users/feed?search=Remote
+GET http://localhost:8080/v1/users/feed
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzb2NpYWwiLCJleHAiOjE3MzY2NzU3NzksImlhdCI6MTczNjA3MDk3OSwiaXNzIjoic29jaWFsIiwibmJmIjoxNzM2MDcwOTc5LCJzdWIiOjEyOH0.At8jgRG_MYUGHOxZ2RCbRRqy2iT_hxF1AauOiDHdTbU

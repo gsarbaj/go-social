@@ -13,10 +13,10 @@ type Post struct {
 	Content   string    `json:"content"`
 	Title     string    `json:"title"`
 	UserID    int64     `json:"user_id"`
-	Version   int64     `json:"version"`
 	Tags      []string  `json:"tags"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+	Version   int64     `json:"version"`
 	Comments  []Comment `json:"comments"`
 	User      User      `json:"user"`
 }
@@ -108,8 +108,8 @@ func (s *PostStore) GetByID(ctx context.Context, id int64) (*Post, error) {
 		&post.Content,
 		&post.CreatedAt,
 		&post.UpdatedAt,
-		&post.Version,
 		pq.Array(&post.Tags),
+		&post.Version,
 	)
 	if err != nil {
 		switch {
