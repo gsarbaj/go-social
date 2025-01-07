@@ -1,5 +1,7 @@
 POST http://localhost:8080/v1/posts/
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzb2NpYWwiLCJleHAiOjE3MzY4NjUyNDgsImlhdCI6MTczNjI2MDQ0OCwiaXNzIjoic29jaWFsIiwibmJmIjoxNzM2MjYwNDQ4LCJzdWIiOjEyOH0.zw_tyldCP5Xz0Kd9CD0IDj2P1xeI0B6n_lPI-zSAAho
+
 
 {
   "title": "Hello",
