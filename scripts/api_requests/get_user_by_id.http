@@ -1,1 +1,2 @@
-GET http://localhost:8080/v1/users/255
+GET http://localhost:8080/v1/users/128
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJzb2NpYWwiLCJleHAiOjE3MzY2NzU3NzksImlhdCI6MTczNjA3MDk3OSwiaXNzIjoic29jaWFsIiwibmJmIjoxNzM2MDcwOTc5LCJzdWIiOjEyOH0.At8jgRG_MYUGHOxZ2RCbRRqy2iT_hxF1AauOiDHdTbU
